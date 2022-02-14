@@ -5,9 +5,29 @@ from os.path import isdir
 from os import listdir
 
 
+def clear_code(notebook):
+    ntbk = nbf.read(notebook, nbf.NO_CONVERT)
+    new_ntbk = ntbk
+    new_ntbk.cells = [cell if cell.cell_type == "markdown" else nbf.v4.new_code_cell() for cell in ntbk.cells ]
+    nbf.write(new_ntbk, notebook, version=nbf.NO_CONVERT)
 
 def gen_jupyter(folder_content):
     pass
+
+
+def add_header_colab(notebook):
+    ntbk = nbf.read(notebook, nbf.NO_CONVERT)
+    text_link = ""
+    # code = ""
+# %pylab inline
+# hist(normal(size=2000), bins=50);"""
+
+    # cells = [nbf.v4.new_markdown_cell(text), nbf.v4.new_code_cell(code)]
+    cell_link = nbf.v4.new_markdown_cell(text)
+    ntbk['cells'].extend(cells)
+
+    nbf.write(nb, 'eda_new.ipynb')
+
 
 def gen_colab(folder_content):
     pass
