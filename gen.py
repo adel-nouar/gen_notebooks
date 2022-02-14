@@ -1,8 +1,94 @@
+from distutils.file_util import copy_file
 from genericpath import isfile
 import sys
 import nbformat as nbf
 from os.path import isdir
+from os.path import join
 from os import listdir
+from os import getcwd
+from shutil import copytree
+from shutil import copyfile
+
+
+
+current_path:str = ""
+
+jupyter_dir:str = ""
+jupyter_final:str = ""
+jupyter_starter:str = ""
+
+colab_dir:str = ""
+colab_final:str = ""
+colab_starter:str = ""
+
+notebooks = []
+
+def fill_paths(folder:str):
+    current_path = join(getcwd(), folder)
+
+    jupyter_dir = join(current_path, 'jupyter') 
+    jupyter_final = join(jupyter_dir, 'final')
+    jupyter_starter = join(jupyter_dir, 'starter')
+
+    colab_dir = join(current_path, 'colab')
+    colab_final = join(colab_dir, 'final')
+    colab_starter = join(colab_dir, 'starter')
+
+
+def copy_files(files:list[str]):
+    for file in files:
+        copy_file(file, jupyter_starter)
+        copy_file(file, jupyter_final)
+
+        copy_file(file, colab_starter)
+        copy_file(file, colab_final)
+
+
+def copy_folders(folders:list[str]):
+    for folder in folders:
+        copytree(folder, jupyter_final)
+        copytree(folder, jupyter_starter)
+
+
+def copy_documents(folder_content:list[str], folders:list[str], notebooks:list[str], other_files:list[str]):
+    if len(notebooks) > 0:
+        copy_files(notebooks)
+    else:
+        print('ERROR: No notebooks')
+    if len(folders) > 0:
+        copy_folders(folders)
+    if len(other_files) > 0:
+        copy_files(other_files)
+
+def get_inside(folder:str):
+    folder_content = listdir(folder)
+    
+    folders = [d for d in folder_content if isdir(d)]
+    
+    notebooks = [f_ntbk for f_ntbk in folder_content if isfile(f_ntbk) and f_ntbk[-6:] == '.ipynb' ]
+    
+    other_files = [f for f in folder_content if isfile(f) and f[-6:] != '.ipynb' ]
+
+    return folder_content, folders, notebooks, other_files
+
+
+def gen_content(folder:str) -> bool:
+
+    folder_content, folders, notebooks, other_files = get_inside(folder)
+    
+    if len(notebooks) > 0:
+        copy_documents(folder_content, folders, notebooks, other_files)
+        return True
+    else:
+        return False
+
+
+def generate(folder:str) -> bool:
+    if gen_content(folder):
+        return True
+    else:
+        print('ERROR in a specified folder no notebooks')
+        return False
 
 
 def clear_code(notebook):
@@ -10,9 +96,6 @@ def clear_code(notebook):
     new_ntbk = ntbk
     new_ntbk.cells = [cell if cell.cell_type == "markdown" else nbf.v4.new_code_cell() for cell in ntbk.cells ]
     nbf.write(new_ntbk, notebook, version=nbf.NO_CONVERT)
-
-def gen_jupyter(folder_content):
-    pass
 
 
 def add_header_colab(notebook):
@@ -29,49 +112,23 @@ def add_header_colab(notebook):
     nbf.write(nb, 'eda_new.ipynb')
 
 
-def gen_colab(folder_content):
-    pass
-
-
-def copy_documents(folder_content, folders, notebooks, other_files):
-    pass
-
-
-def get_inside(folder):
-    folder_content = listdir(folder)
-    
-    folders = [d for d in folder_content if isdir(d)]
-    
-    notebooks = [f_ntbk for f_ntbk in folder_content if isfile(f_ntbk) and f_ntbk[-6:] == '.ipynb' ]
-    
-    other_files = [f for f in folder_content if isfile(f) and f[-6:] != '.ipynb' ]
-
-    return folder_content, folders, notebooks, other_files
-
-
-def gen_content(folder:str):
-
-    folder_content, folders, notebooks, other_files = get_inside(folder)
-    
-    copy_documents(folder_content, folders, notebooks, other_files)
-
-
-
-
-
-def generate(folder:str):
-    gen_content(folder)
-    gen_header(folder)
-    clear_code_starter(folder)
-
-
+def clean_notebooks():
+    for notebook in notebooks:
+        jupyt_strt:str = join(jupyter_starter, notebook)
+        clear_code(jupyt_strt)
+        
+        colb_strt:str = join(colab_starter, notebook)
+        colb_finl:str = join(colab_final, notebook)
+        clear_code(colb_strt)
+        add_header_colab(colb_finl)
 
 
 if len(sys.argv) >= 2:
     for arg in sys.argv:
         if isdir(arg): 
-            print('YES')
-            generate(arg)
+            fill_paths(arg)
+            if generate(arg):
+                clean_notebooks()
             # Remove old notebooks
         else:
             print(f'{arg} is not a directory')
