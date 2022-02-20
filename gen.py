@@ -33,7 +33,7 @@ TODOs:
 from distutils.file_util import copy_file
 import sys
 import nbformat as nbf
-from os.path import isdir, isfile, join, basename
+from os.path import isdir, isfile, join, basename, splitext
 from os import listdir, getcwd, makedirs
 from shutil import copytree
 
@@ -92,8 +92,10 @@ def copy_documents(folder_content:list[str], folders:list[str], notebooks:list[s
 def get_inside(folder:str):
     folder_content =  [folder+'/'+elt for elt in listdir(folder)]
     folders = [d for d in folder_content if isdir(d)]
-    notebooks = [f_ntbk for f_ntbk in folder_content if isfile(f_ntbk) and f_ntbk[-6:] == '.ipynb' ]
-    other_files = [f for f in folder_content if isfile(f) and f[-6:] != '.ipynb' ]
+    # notebooks = [f_ntbk for f_ntbk in folder_content if isfile(f_ntbk) and f_ntbk[-6:] == '.ipynb' ]
+    notebooks = [f_ntbk for f_ntbk in folder_content if isfile(f_ntbk) and splitext(f_ntbk)[1] == '.ipynb' ]
+    # other_files = [f for f in folder_content if isfile(f) and f[-6:] != '.ipynb' ]
+    other_files = [f for f in folder_content if isfile(f) and splitext(f)[1] != '.ipynb' ]
 
     return folder_content, folders, notebooks, other_files
 
