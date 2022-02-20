@@ -31,10 +31,10 @@ TODOs:
 '''
 
 from distutils.file_util import copy_file
-from genericpath import isfile
+# from genericpath import isfile
 import sys
 import nbformat as nbf
-from os.path import isdir, join
+from os.path import isdir, isfile, join
 from os import listdir, getcwd
 from shutil import copytree
 
@@ -91,7 +91,8 @@ def copy_documents(folder_content:list[str], folders:list[str], notebooks:list[s
         copy_files(other_files)
 
 def get_inside(folder:str):
-    folder_content = listdir(folder)
+
+    folder_content =  [folder+'/'+c for c in listdir(folder)]
     
     folders = [d for d in folder_content if isdir(d)]
     
