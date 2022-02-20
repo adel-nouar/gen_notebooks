@@ -50,7 +50,7 @@ colab_dir:str = ""
 colab_final:str = ""
 colab_starter:str = ""
 
-notebooks = []
+notebooks:list[str] = []
 
 def fill_paths(folder:str):
     global current_path, jupyter_dir, jupyter_final, jupyter_starter, colab_dir, colab_final, colab_starter
@@ -137,6 +137,13 @@ def clear_code(notebook):
 
 
 def add_header_colab(notebook):
+    filename = 
+    name_file = 'href=' + file
+    target = 'target="_parent"'
+
+    image = '<img src="https://colab.research.google.com/assets/colab-badge.svg"' + 'alt="Open In Colab"/>'
+    text_in_markub_cell = '<a ' + file_name + ' ' + target + image + '</a>
+
     ntbk = nbf.read(notebook, nbf.NO_CONVERT)
     text_link = ""
     # code = ""
@@ -158,6 +165,8 @@ def clean_notebooks():
         # colb_finl:str = join(colab_starter, basename(notebook))
         clear_code(colb_strt)
         # add_header_colab(colb_finl)
+
+
 
 
 if len(sys.argv) >= 2:
