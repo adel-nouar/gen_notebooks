@@ -34,12 +34,9 @@ from distutils.file_util import copy_file
 from genericpath import isfile
 import sys
 import nbformat as nbf
-from os.path import isdir
-from os.path import join
-from os import listdir
-from os import getcwd
+from os.path import isdir, join
+from os import listdir, getcwd
 from shutil import copytree
-from shutil import copyfile
 
 
 GIT_HUB_PATH = "https://github.com/LearnPythonWithRune/"
