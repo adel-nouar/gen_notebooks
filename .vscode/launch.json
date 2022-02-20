@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "${file}",
       "args": [
-        "/home/adel/Documents/Project/perso/9781789615326_Code/Hands-On-Data-Analysis-with-Pandas-master/Chapter01"
+        "/home/adel/Documents/Project/perso/9781789615326_Code/Hands-On-Data-Analysis-with-Pandas-master/Chapter02"
       ],
       "console": "integratedTerminal",
       "justMyCode": true

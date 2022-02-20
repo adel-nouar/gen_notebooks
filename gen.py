@@ -1,15 +1,15 @@
 '''
-TODOs: 
-- Test for copy part: 
-        --> folders copied in the jupyter starter and final folders
-        --> notebooks copied in the jupyter starter and final folders
-        --> other files copied in the jupyter starter and final folders
+TODOs:
+- Test for copy part:
+        --> folders copied in the jupyter starter and final folders : KO
+        --> notebooks copied in the jupyter starter and final folders : OK
+        --> other files copied in the jupyter starter and final folders : OK
 
-- Test all code cells in starter notebooks cleared
+- Test all code cells in starter notebooks cleared : OK
 
 - Modify the add_header_colab function:
         --> Take GIT_HUB_PATH constant, and concatenate with the folder name (only main folder project name + subfolders (colab/starer and colab/final)).
-        
+
         --> Create a text represent the google colabs link with the constant above.
 
         --> Create a cell with the previous text.
@@ -20,7 +20,7 @@ TODOs:
 
 - Instead of given list of folders in the command arguments:
         --> An input file with the list of all repos to modify
-        --> for each repos: 
+        --> for each repos:
                             ---> git clone
                             ---> git checkout -b dev
                             ---> performs the actions
@@ -31,11 +31,10 @@ TODOs:
 '''
 
 from distutils.file_util import copy_file
-# from genericpath import isfile
 import sys
 import nbformat as nbf
-from os.path import isdir, isfile, join
-from os import listdir, getcwd
+from os.path import isdir, isfile, join, basename
+from os import listdir, getcwd, makedirs
 from shutil import copytree
 
 
@@ -54,12 +53,11 @@ colab_starter:str = ""
 notebooks = []
 
 def fill_paths(folder:str):
+    global current_path, jupyter_dir, jupyter_final, jupyter_starter, colab_dir, colab_final, colab_starter
     current_path = join(getcwd(), folder)
-
-    jupyter_dir = join(current_path, 'jupyter') 
+    jupyter_dir = join(current_path, 'jupyter')
     jupyter_final = join(jupyter_dir, 'final')
     jupyter_starter = join(jupyter_dir, 'starter')
-
     colab_dir = join(current_path, 'colab')
     colab_final = join(colab_dir, 'final')
     colab_starter = join(colab_dir, 'starter')
@@ -69,7 +67,6 @@ def copy_files(files:list[str]):
     for file in files:
         copy_file(file, jupyter_starter)
         copy_file(file, jupyter_final)
-
         copy_file(file, colab_starter)
         copy_file(file, colab_final)
 
@@ -86,28 +83,36 @@ def copy_documents(folder_content:list[str], folders:list[str], notebooks:list[s
     else:
         print('ERROR: No notebooks')
     if len(folders) > 0:
-        copy_folders(folders)
+        # copy_folders(folders)
+        pass
     if len(other_files) > 0:
         copy_files(other_files)
 
-def get_inside(folder:str):
 
+def get_inside(folder:str):
     folder_content =  [folder+'/'+elt for elt in listdir(folder)]
-    
     folders = [d for d in folder_content if isdir(d)]
-    
     notebooks = [f_ntbk for f_ntbk in folder_content if isfile(f_ntbk) and f_ntbk[-6:] == '.ipynb' ]
-    
     other_files = [f for f in folder_content if isfile(f) and f[-6:] != '.ipynb' ]
 
     return folder_content, folders, notebooks, other_files
 
 
-def gen_content(folder:str) -> bool:
+def create_folders():
+    try:
+        makedirs(jupyter_starter)
+        makedirs(jupyter_final)
+        makedirs(colab_starter)
+        makedirs(colab_final)
+    except:
+        pass
 
+
+def gen_content(folder:str) -> bool:
+    global notebooks
     folder_content, folders, notebooks, other_files = get_inside(folder)
-    
     if len(notebooks) > 0:
+        create_folders()
         copy_documents(folder_content, folders, notebooks, other_files)
         return True
     else:
@@ -135,28 +140,27 @@ def add_header_colab(notebook):
     # code = ""
 # %pylab inline
 # hist(normal(size=2000), bins=50);"""
-
     # cells = [nbf.v4.new_markdown_cell(text), nbf.v4.new_code_cell(code)]
     cell_link = nbf.v4.new_markdown_cell(text)
     ntbk['cells'].extend(cells)
-
     nbf.write(nb, 'eda_new.ipynb')
 
 
 def clean_notebooks():
     for notebook in notebooks:
-        jupyt_strt:str = join(jupyter_starter, notebook)
+
+        jupyt_strt:str = join(jupyter_starter, basename(notebook))
         clear_code(jupyt_strt)
-        
-        colb_strt:str = join(colab_starter, notebook)
-        colb_finl:str = join(colab_final, notebook)
+
+        colb_strt:str = join(colab_starter, basename(notebook))
+        # colb_finl:str = join(colab_starter, basename(notebook))
         clear_code(colb_strt)
-        add_header_colab(colb_finl)
+        # add_header_colab(colb_finl)
 
 
 if len(sys.argv) >= 2:
     for arg in sys.argv:
-        if isdir(arg): 
+        if isdir(arg):
             fill_paths(arg)
             if generate(arg):
                 clean_notebooks()
