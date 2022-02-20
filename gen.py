@@ -92,7 +92,7 @@ def copy_documents(folder_content:list[str], folders:list[str], notebooks:list[s
 
 def get_inside(folder:str):
 
-    folder_content =  [folder+'/'+c for c in listdir(folder)]
+    folder_content =  [folder+'/'+elt for elt in listdir(folder)]
     
     folders = [d for d in folder_content if isdir(d)]
     
