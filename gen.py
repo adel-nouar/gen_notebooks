@@ -137,22 +137,24 @@ def clear_code(notebook):
 
 
 def add_header_colab(notebook):
-    filename = 
-    name_file = 'href=' + file
+    full_github_path = GIT_HUB_PATH + basename(current_path)
+    filename = full_github_path + notebook
+
+    name_file = 'href=' + filename
     target = 'target="_parent"'
 
     image = '<img src="https://colab.research.google.com/assets/colab-badge.svg"' + 'alt="Open In Colab"/>'
-    text_in_markub_cell = '<a ' + file_name + ' ' + target + image + '</a>
+    text_in_markub_cell = '<a ' + name_file + ' ' + target + image + '</a>
 
     ntbk = nbf.read(notebook, nbf.NO_CONVERT)
-    text_link = ""
+
     # code = ""
 # %pylab inline
 # hist(normal(size=2000), bins=50);"""
     # cells = [nbf.v4.new_markdown_cell(text), nbf.v4.new_code_cell(code)]
-    cell_link = nbf.v4.new_markdown_cell(text)
-    ntbk['cells'].extend(cells)
-    nbf.write(nb, 'eda_new.ipynb')
+    cell_link = nbf.v4.new_markdown_cell(text_in_markub_cell)
+    ntbk['cells'].extend(text_in_markub_cell)
+    nbf.write(ntbk, 'eda_new.ipynb')
 
 
 def clean_notebooks():
