@@ -38,7 +38,8 @@ from os import listdir, getcwd, makedirs
 from shutil import copytree
 
 
-GIT_HUB_PATH = "https://github.com/LearnPythonWithRune/"
+GIT_HUB_PATH = "github/LearnPythonWithRune/"
+
 
 current_path:str = ""
 
@@ -137,18 +138,28 @@ def clear_code(notebook):
 
 
 def add_header_colab(notebook):
-    full_github_path = GIT_HUB_PATH + basename(current_path)
-    filename = full_github_path + notebook
-    print(filename)
-    name_file = 'href=' + filename
-    target = 'target="_parent"'
+    colab_base_link = 'https://colab.research.google.com/'
 
-    image = '<img src="https://colab.research.google.com/assets/colab-badge.svg"' + 'alt="Open In Colab"/>'
-    text_in_markub_cell = '<a ' + name_file + ' ' + target + image + '</a>'
+    full_href_link = '"' + colab_base_link + GIT_HUB_PATH + basename(current_path) + '"'
+
+    # filename = full_github_path + '/' + notebook
+    # print(filename)
+    name_file = '<a href=' + full_href_link
+    target = 'target="_parent">'
+
+    colab_img_link = '"' + colab_base_link + 'assets/colab-badge.svg' + '"'
+    image = '<img src=' + colab_img_link + 'alt="Open In Colab"/>'
+    text_in_markup_cell = name_file + ' ' + target + image + '</a>'
     cells = []
-    cell_link = nbf.v4.new_markdown_cell(text_in_markub_cell)
+
+    nb = nbf.v4.new_notebook()
+    
+    cell_link = nbf.v4.new_markdown_cell(text_in_markup_cell)
     cells.append(cell_link)
-    nbf.write(cells, join(current_path,'eda_new.ipynb'))
+    nb["cells"] = cells
+    ntbk_name = basename(notebook)
+    with open(ntbk_name, 'w') as f:
+        nbf.write(nb, f)
 
 #     ntbk = nbf.read(notebook, nbf.NO_CONVERT)
 
@@ -168,9 +179,9 @@ def clean_notebooks():
         clear_code(jupyt_strt)
 
         colb_strt:str = join(colab_starter, basename(notebook))
-        colb_finl:str = join(colab_starter, basename(notebook))
+        #colb_finl:str = join(colab_starter, basename(notebook))
         clear_code(colb_strt)
-        add_header_colab(colb_finl)
+        #add_header_colab(colb_finl)
 
 
 
