@@ -139,22 +139,26 @@ def clear_code(notebook):
 def add_header_colab(notebook):
     full_github_path = GIT_HUB_PATH + basename(current_path)
     filename = full_github_path + notebook
-
+    print(filename)
     name_file = 'href=' + filename
     target = 'target="_parent"'
 
     image = '<img src="https://colab.research.google.com/assets/colab-badge.svg"' + 'alt="Open In Colab"/>'
-    text_in_markub_cell = '<a ' + name_file + ' ' + target + image + '</a>
-
-    ntbk = nbf.read(notebook, nbf.NO_CONVERT)
-
-    # code = ""
-# %pylab inline
-# hist(normal(size=2000), bins=50);"""
-    # cells = [nbf.v4.new_markdown_cell(text), nbf.v4.new_code_cell(code)]
+    text_in_markub_cell = '<a ' + name_file + ' ' + target + image + '</a>'
+    cells = []
     cell_link = nbf.v4.new_markdown_cell(text_in_markub_cell)
-    ntbk['cells'].extend(text_in_markub_cell)
-    nbf.write(ntbk, 'eda_new.ipynb')
+    cells.append(cell_link)
+    nbf.write(cells, join(current_path,'eda_new.ipynb'))
+
+#     ntbk = nbf.read(notebook, nbf.NO_CONVERT)
+
+#     # code = ""
+# # %pylab inline
+# # hist(normal(size=2000), bins=50);"""
+#     # cells = [nbf.v4.new_markdown_cell(text), nbf.v4.new_code_cell(code)]
+#     cell_link = nbf.v4.new_markdown_cell(text_in_markub_cell)
+#     ntbk['cells'].extend(text_in_markub_cell)
+#     nbf.write(ntbk, 'eda_new.ipynb')
 
 
 def clean_notebooks():
@@ -164,9 +168,9 @@ def clean_notebooks():
         clear_code(jupyt_strt)
 
         colb_strt:str = join(colab_starter, basename(notebook))
-        # colb_finl:str = join(colab_starter, basename(notebook))
+        colb_finl:str = join(colab_starter, basename(notebook))
         clear_code(colb_strt)
-        # add_header_colab(colb_finl)
+        add_header_colab(colb_finl)
 
 
 
