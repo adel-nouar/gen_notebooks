@@ -9,9 +9,7 @@
       "type": "python",
       "request": "launch",
       "program": "${file}",
-      "args": [
-        "/home/adel/Documents/Project/perso/9781789615326_Code/Hands-On-Data-Analysis-with-Pandas-master/Chapter02"
-      ],
+      "args": ["FinancialDataAnalysisWithPython"],
       "console": "integratedTerminal",
       "justMyCode": true
     }
