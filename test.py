@@ -25,8 +25,19 @@ def add_header_colab(notebook):
     
     cell_link = nbf.v4.new_markdown_cell(text_in_markup_cell)
     cells.append(cell_link)
-    nb["cells"] = cells
+    # nb["cells"] = cells
+
+# New added
+    ntbk = nbf.read(notebook, nbf.NO_CONVERT)
+    # ntbk_new = [cell for cell in ntbk.cells ]
+    # cells.append(ntbk.cells)
+    all_cells = cells + ntbk.cells
+    nb['cells'] = all_cells
+# end new added
+    # ntbk_name = basename(notebook)
     ntbk_name = basename(notebook)
+
+
     with open(ntbk_name, 'w') as f:
         nbf.write(nb, f)
 
@@ -41,4 +52,4 @@ def add_header_colab(notebook):
 #     nbf.write(ntbk, 'eda_new.ipynb')
 
 
-add_header_colab('test.ipynb')
+add_header_colab('test1.ipynb')
