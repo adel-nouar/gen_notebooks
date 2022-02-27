@@ -144,28 +144,32 @@ def add_header_colab(notebook):
 
     # filename = full_github_path + '/' + notebook
     # print(filename)
-    name_file = '<a \n href=' + full_href_link + '\n'
-    target = 'target="_parent">' + '\n'
+    name_file = '<a href=' + full_href_link
+    target = 'target="_parent">'
 
     colab_img_link = '"' + colab_base_link + 'assets/colab-badge.svg' + '"'
-    image = '<img \n src=' + colab_img_link + '\n' + 'alt="Open In Colab"/>'
-    text_in_markup_cell = name_file + ' ' + target + image + '\n' + '</a>'
+    image = '<img src=' + colab_img_link + 'alt="Open In Colab"/>'
+    text_in_markup_cell = name_file + ' ' + target + image + '</a>'
     cells = []
 
     nb = nbf.v4.new_notebook()
     
     cell_link = nbf.v4.new_markdown_cell(text_in_markup_cell)
     cells.append(cell_link)
-    # nb["cells"] = cells
-# New added
-    ntbk = nbf.read(notebook, nbf.NO_CONVERT)
-    all_cells = cells + ntbk.cells
-    nb['cells'] = all_cells
-# end new added
-    nbf.write(nb, notebook, version=nbf.NO_CONVERT)
-    # ntbk_name = basename(notebook)
-    # with open(ntbk_name, 'w') as f:
-    #     nbf.write(nb, f)
+    nb["cells"] = cells
+    ntbk_name = basename(notebook)
+    with open(ntbk_name, 'w') as f:
+        nbf.write(nb, f)
+
+#     ntbk = nbf.read(notebook, nbf.NO_CONVERT)
+
+#     # code = ""
+# # %pylab inline
+# # hist(normal(size=2000), bins=50);"""
+#     # cells = [nbf.v4.new_markdown_cell(text), nbf.v4.new_code_cell(code)]
+#     cell_link = nbf.v4.new_markdown_cell(text_in_markub_cell)
+#     ntbk['cells'].extend(text_in_markub_cell)
+#     nbf.write(ntbk, 'eda_new.ipynb')
 
 
 def clean_notebooks():
@@ -175,11 +179,9 @@ def clean_notebooks():
         clear_code(jupyt_strt)
 
         colb_strt:str = join(colab_starter, basename(notebook))
+        #colb_finl:str = join(colab_starter, basename(notebook))
         clear_code(colb_strt)
-        add_header_colab(colb_strt)
-
-        colb_finl:str = join(colab_final, basename(notebook))
-        add_header_colab(colb_finl)
+        #add_header_colab(colb_finl)
 
 
 
