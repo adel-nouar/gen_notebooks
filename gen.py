@@ -140,7 +140,7 @@ def clear_code(notebook):
 def add_header_colab(notebook):
     colab_base_link = 'https://colab.research.google.com/'
 
-    full_href_link = '"' + colab_base_link + GIT_HUB_PATH + basename(current_path) + '"'
+    full_href_link = '"' + colab_base_link + GIT_HUB_PATH + basename(current_path) + basename(notebook) +'"'
 
     # filename = full_github_path + '/' + notebook
     # print(filename)
