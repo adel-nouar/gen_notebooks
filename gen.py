@@ -144,12 +144,12 @@ def add_header_colab(notebook):
 
     # filename = full_github_path + '/' + notebook
     # print(filename)
-    name_file = '<a href=' + full_href_link
-    target = 'target="_parent">'
+    name_file = '<a \n href=' + full_href_link + '\n'
+    target = 'target="_parent">' + '\n'
 
     colab_img_link = '"' + colab_base_link + 'assets/colab-badge.svg' + '"'
-    image = '<img src=' + colab_img_link + 'alt="Open In Colab"/>'
-    text_in_markup_cell = name_file + ' ' + target + image + '</a>'
+    image = '<img \n src=' + colab_img_link + '\n' + 'alt="Open In Colab"/>'
+    text_in_markup_cell = name_file + ' ' + target + image + '\n' + '</a>'
     cells = []
 
     nb = nbf.v4.new_notebook()
@@ -179,9 +179,11 @@ def clean_notebooks():
         clear_code(jupyt_strt)
 
         colb_strt:str = join(colab_starter, basename(notebook))
-        #colb_finl:str = join(colab_starter, basename(notebook))
         clear_code(colb_strt)
-        #add_header_colab(colb_finl)
+        add_header_colab(colb_strt)
+
+        colb_finl:str = join(colab_final, basename(notebook))
+        add_header_colab(colb_finl)
 
 
 
