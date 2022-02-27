@@ -33,6 +33,7 @@ TODOs:
 from distutils.file_util import copy_file
 import sys
 import nbformat as nbf
+import os
 from os.path import isdir, isfile, join, basename, splitext
 from os import listdir, getcwd, makedirs
 from shutil import copytree
@@ -139,8 +140,13 @@ def clear_code(notebook):
 
 def add_header_colab(notebook):
     colab_base_link = 'https://colab.research.google.com/'
+    full_main_from_colab = colab_base_link + GIT_HUB_PATH
+    full_repo = full_main_from_colab + basename(current_path)
+    sub_repo_and_filenane = "/".join(notebook.split(os.sep)[-3:])
+    full_link = full_repo + '/blob/main/' + sub_repo_and_filenane
 
-    full_href_link = '"' + colab_base_link + GIT_HUB_PATH + basename(current_path) + basename(notebook) +'"'
+    # full_href_link = '"' + colab_base_link + GIT_HUB_PATH + basename(current_path) + '/blob/main/' + basename(notebook) +'"'
+    full_href_link = '"' + full_link +'"'
 
     # filename = full_github_path + '/' + notebook
     # print(filename)
